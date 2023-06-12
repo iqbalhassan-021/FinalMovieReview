@@ -1,0 +1,72 @@
+﻿@page "/MovieReview"
+@using Microsoft.AspNetCore.Components.Forms
+@using FinalMovieReview.Shared.Model
+@using static System.Net.WebRequestMethods
+@inject HttpClient Http
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/NewCss/Style.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Reviews</title>
+</head>
+<body>
+     <NavBar></NavBar>
+    <div class="admincontainer">
+     
+        <div class="image-container">
+          <img src="/Assets/download.jpg" alt="Image">
+        </div>
+        <h1>Movie Name</h1>
+        <EditForm Model="@mReview" OnSubmit="@HandleOnSubmit">
+          <div class="form-group">
+            <label for="description">Your Review:</label>
+                <InputText id="description" placeholder="Enter description" @bind-Value="mReview.MDesc" class="textinputstyle"></InputText>
+            <label for="description">Your Rating:</label>
+                <InputNumber id="custid" class="numtextinputstyle" @bind-Value="mReview.MRating"></InputNumber><br />
+            
+          </div>
+            <button value="Upload" class="upload-btn">Submit</button>
+            <span>@message</span>
+        </EditForm>
+      </div>
+      <div class="tablecontainer">
+        <h1>Movie Reviews</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Movie Rating</th>
+              <th>Movie Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>User @mReview.user</td>
+                    <td>@mReview.MRating</td>
+                    <td>@mReview.MDesc</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    
+     <Footer></Footer>
+</body>
+@code {
+    MReviews mReview = new MReviews();
+    string message = "";
+    async void HandleOnSubmit()
+    {
+        if (mReview.MRating > 10 || mReview.MRating < 0)
+            {
+                message = "Rating must be between 0-10!";
+            }
+            else
+            {
+                mReview.user = mReview.user + 1;
+
+                var movieReview = await Http.PostAsJsonAsync<MReviews>("MReviews/Create", mReview);
+                message = "Your response have been saved!";
+            }
+    }
+}

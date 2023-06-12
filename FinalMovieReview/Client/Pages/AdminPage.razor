@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using FinalMovieReview.Shared.Model
+@using static System.Net.WebRequestMethods
+@inject HttpClient Http
+
+@page "/AdminPage"
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/NewCss/Style.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Reviews</title>
+</head>
+<body>
+    <NavBar></NavBar>
+      <div class="admincontainer">
+        <h1>Upload new Movie</h1>
+  
+        <EditForm Model="@mData" OnSubmit="@HandleOnSubmit">
+
+
+  
+        <label>Movie Name
+        <InputText id="custname" class="textinputstyle" @bind-Value=@mData.MovieName></InputText><br />
+       </label>
+        <label>Movie Rating<br />
+        <InputNumber id="custid" class="numtextinputstyle" @bind-Value=@mData.MovieRating></InputNumber><br />
+        </label>
+        <label>Description<br />
+        <InputTextArea id="custname" class="numtextinputstyle" @bind-Value=@mData.MovieDescription></InputTextArea><br />
+       </label>
+        <button type="submit" class="upload-btn">Submit data</button><br />
+        <span>@message</span>
+
+    
+</EditForm>
+
+      </div>
+    
+     <Footer></Footer>
+ </body>
+@code {
+    MData mData = new MData();
+    string message = "";
+    async void HandleOnSubmit()
+    {
+        if(mData.MovieRating>10|| mData.MovieRating < 0)
+        {
+            message = "Rating must be between 0-10!";
+        }
+        else
+        {
+            //MDatas/Create
+            var movieReview = await Http.PostAsJsonAsync<MData>("MDatas/Create", mData);
+            message = "Data saved successfully!";
+        }
+    
+    }
+
+}

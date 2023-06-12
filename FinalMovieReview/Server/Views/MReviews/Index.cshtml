@@ -1,0 +1,41 @@
+﻿@model IEnumerable<FinalMovieReview.Shared.Model.MReviews>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MRating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MDesc)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MRating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MDesc)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.user">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.user">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.user">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
